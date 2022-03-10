@@ -36,7 +36,6 @@ const svg3 = d3.select("#vis-holder")
 let bars;
 
 // Define color scale
-//TODOOOOOOO list
 const color = d3.scaleOrdinal()
                 .domain(["setosa", "versicolor", "virginica"])
                 .range(["#FF7F50", "#21908dff", "#fde725ff"]);
@@ -98,7 +97,7 @@ d3.csv("data/iris.csv").then((data) => {
       );
 
     // Add points1 using the data
-    const points1 = svg1.selectAll("circle")
+    points1 = svg1.selectAll("circle")
                             .data(data)
                             .enter()
                               .append("circle")
@@ -249,16 +248,16 @@ d3.csv("data/iris.csv").then((data) => {
 
   // barchart!
     bars = svg3.selectAll("rect")
-    .data(barchartData)
-    .enter()
-    .append("rect")
-      .attr("class", "bar")
-      .attr("x", (d, i) => x3(i))
-      .attr("y", (d) => y3(d[yKey3]))
-      .attr("width", x3.bandwidth())
-      .attr("height", (d) => (height - margin.bottom) - y3(d[yKey3]))
-      .style("fill", (d) => color(d[xKey3]))
-      .style("opacity", 0.5);
+      .data(barchartData)
+      .enter()
+      .append("rect")
+        .attr("class", "bar")
+        .attr("x", (d, i) => x3(i))
+        .attr("y", (d) => y3(d[yKey3]))
+        .attr("width", x3.bandwidth())
+        .attr("height", (d) => (height - margin.bottom) - y3(d[yKey3]))
+        .style("fill", (d) => color(d[xKey3]))
+        .style("opacity", 0.5);
 }
 
   //Brushing Code---------------------------------------------------------------------------------------------
@@ -274,21 +273,19 @@ d3.csv("data/iris.csv").then((data) => {
   // Call when Scatterplot1 is brushed 
   function updateChart1(brushEvent) {
       
-      //TODO: Find coordinates of brushed region 
-      let coords = d3.brushSelection(this);
+    //TODO: Find coordinates of brushed region 
+    let coords = d3.brushSelection(this);
 
-      //TODO: Give bold outline to all points within the brush region in Scatterplot1
-      points1.classed("brushed", function (d) {
-        return isBrushed(coords, x1(d[xKey1]), y1(d[yKey1]))
-      })
+    //TODO: Give bold outline to all points within the brush region in Scatterplot1
+    points1.classed("brushed", function (d) {
+      return isBrushed(coords, x1(d[xKey1]), y1(d[yKey1]))
+    })
 
-      //TODO: Give bold outline to all points in Scatterplot2 corresponding to points within the brush region in Scatterplot1
-      points2.classed("brushed", function (d) {
-        return isBrushed(coords, x1(d[xKey1]), y1(d[yKey1]))
+    //TODO: Give bold outline to all points in Scatterplot2 corresponding to points within the brush region in Scatterplot1
+    points2.classed("brushed", function (d) {
+      return isBrushed(coords, x1(d[xKey1]), y1(d[yKey1]))
     })
   }
-
-
 
   // Call when Scatterplot2 is brushed 
   function updateChart2(brushEvent) {
@@ -301,13 +298,12 @@ d3.csv("data/iris.csv").then((data) => {
 
     //TODO: Give bold outline to all points within the brush region in Scatterplot2 & collected names of brushed species
     points2.classed("brushed", function (d) {
+      selected = isBrushed(coords, x2(d[xKey2]), y2(d[yKey2]));
 
-      is_selected = isBrushed(coords, x2(d[xKey2]), y2(d[yKey2]));
-
-      if (is_selected) {
-        selected_specie_names.add(d["Species"]);
+      if (selected) {
+        selected_specie_names.add(d[xKey3]);
       }
-      return is_selected;
+      return selected;
     })
 
     //TODO: Give bold outline to all points in Scatterplot1 corresponding to points within the brush region in Scatterplot2
@@ -317,7 +313,7 @@ d3.csv("data/iris.csv").then((data) => {
 
     //TODO: Give bold outline to all bars in bar chart with corresponding to species selected by Scatterplot2 brush
     bars.classed("brushed", function (d) {
-      return selected_specie_names.has(d["Species"]);
+      return selected_specie_names.has(d[xKey3]);
     })
   }
 
@@ -330,8 +326,7 @@ d3.csv("data/iris.csv").then((data) => {
         x1 = brush_coords[1][0],
         y0 = brush_coords[0][1],
         y1 = brush_coords[1][1];
-        // Return TRUE or FALSE depending on if the points is in the selected area
+        // Return TRUE if the points are in the selected area
       return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
     }
-
 });
