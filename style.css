@@ -6,7 +6,7 @@ body {
 .brushed {
   stroke: black;
   stroke-width: 3px;
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .non-brushed {
